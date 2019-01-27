@@ -17,6 +17,10 @@ import Tooltip from 'rc-tooltip';
 
 const Handle = Slider.Handle;
 
+const config = require('./config.json');
+const port = config.port;
+const backend_url = config.url;
+
 const rectangleStyle = {
     width: '800px',
     height: '50px',
@@ -33,18 +37,17 @@ class App extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.goHome = this.goHome.bind(this);
-
     }
 
     goHome() {
         this.setState({dataCapture: null});
     }
 
-    sendData(data) {
+    sendData = (data) => {
         var fd = new FormData();
         fd.append('image', data)
 
-        fetch('http://localhost:3001/submission', {
+        fetch(`${backend_url}:${port}/submission`, {
             method: 'POST',
             body: fd
         }).then((response) => response.json())
