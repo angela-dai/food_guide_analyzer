@@ -104,6 +104,7 @@ class App extends Component {
                 ref={(cam) => {
                     this.camera = cam;
                 }}
+                video={{"facingMode":"environment"}}
                 >
                 <div style={style.captureContainer} onClick={this.takePicture}>
                 <div style={style.captureButton} />
