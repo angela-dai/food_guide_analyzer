@@ -15,6 +15,9 @@ import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Tooltip from 'rc-tooltip';
 
+import LineChart from 'react-linechart';
+import WordCloud from 'react-d3-cloud';
+
 const Handle = Slider.Handle;
 
 const config = require('./config.json');
@@ -39,6 +42,10 @@ class App extends Component {
     }
 
     goHome() {
+        this.setState({dataCapture: "HomePage"});
+    }
+
+    goPhoto() {
         this.setState({dataCapture: null});
     }
 
@@ -91,7 +98,7 @@ class App extends Component {
     }
 
     render() {
-        if (this.state.dataCapture === null) {
+        if (this.state.dataCapture === null) { //Photo branch
             return (
                 <div className="App" style={style.backgroundColorCont}> 
                 <header className="App-header" style={{backgroundColor: "lightblue"}}>
@@ -165,10 +172,65 @@ class App extends Component {
                 </button>
                 </div>
                 </div>
-            )
+            );
+        } else if (this.state.dataCapture === 'HomePage') {
+            var data;
+            var data2;
+              console.log("return! HomePage")
+              fetch('http://localhost:3001/trends', {
+                  method: 'GET'
+              }).then((response) => response.json())
+                  .then((result) => {
+                      data = JSON.parse(result);
+                  });
+                  fetch('http://localhost:3001/tags', {
+                      method: 'GET',
+                  }).then((response) => response.json())
+                      .then((result) => {
+                          data2 = JSON.parse(result);
+                      });
+                // const data = [
+                //     {
+                //         color: "steelblue",
+                //         points: [{x: 1, y: 2}, {x: 3, y: 5}, {x: 7, y: -3}]
+                //     }
+                // ];
+                // const data2 = [
+                //   { text: 'Hey', value: 1000 },
+                //   { text: 'lol', value: 200 },
+                //   { text: 'first impression', value: 800 },
+                //   { text: 'very cool', value: 1000000 },
+                //   { text: 'duck', value: 10 },
+                // ];
+              return (
+                  <div>
+                      <div className="App">
+                          <h1>Food Trend</h1>
+                          <LineChart
+                              width={600}
+                              height={400}
+                              data={data}
+                          />
+                      </div>
+                      <div>
+                        <WordCloud
+                          data={data2}
+                          fontSizeMapper={fontSizeMapper}
+                        />
+                      </div>
+                      <div>
+                        <button onClick={() => this.goPhoto()}>
+                            Take Photo
+                        </button>
+                      </div>
+                  </div>
+                );
+            }
         }
     }
-}
+
+
+const fontSizeMapper = word => Math.log2(word.value) * 5;
 
 const handle = (props) => {
     const { value, dragging, index, ...restProps } = props;
