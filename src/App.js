@@ -108,6 +108,40 @@ class App extends Component {
                 </div>
             );
         } else if (this.state.dataCapture === 'PictureTaken') {
+          var data;
+          var data2;
+              const data = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 90}, {x: 4, y: 30}, {x: 5, y: 90}, {x: 6, y: 80}]
+                  }
+              ];
+              const data3 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 40}, {x: 4, y: 90}, {x: 5, y: 80}, {x: 6, y: 70}]
+                  }
+              ];
+              const data4 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 30}, {x: 4, y: 60}, {x: 5, y: 98}, {x: 6, y: 80}]
+                  }
+              ];
+              const data2 = [
+                { text: 'Protein', value: 1000 },
+                { text: 'Fruit', value: 200 },
+                { text: 'Grains', value: 800 },
+                { text: 'Vegetable', value: 1000000 },
+                { text: 'orange', value: 10 },
+                { text: 'apple', value: 30 },
+                { text: 'banana', value: 10 },
+                { text: 'chicken', value: 10 },
+                { text: 'beef', value: 30 },
+                { text: 'sandwhich', value: 10 },
+                { text: 'burger', value: 10 },
+                { text: 'lettuce', value: 30 },
+              ];
             console.log("return! PictureTaken")
             return (
                 <div>
@@ -117,19 +151,49 @@ class App extends Component {
                 <Accordion>
                 <AccordionItem>
                 <AccordionItemTitle>
-                <h3>Tags</h3>
+                <h3>Food Trends</h3>
+                <p> Legend: x is date, y is percentage </p>
                 </AccordionItemTitle>
                 <AccordionItemBody>
-                <p>What Names</p>
+                <div className="App">
+                    Vegetable
+                    <LineChart
+                        width={600}
+                        height={400}
+                        data={data}
+                    />
+                </div>
+                <div className="App">
+                    Proteins
+                    <LineChart
+                        width={600}
+                        height={400}
+                        data={data3}
+                    />
+                </div>
+                <div className="App">
+                    Grains
+                    <LineChart
+                        width={600}
+                        height={400}
+                        data={data4}
+                    />
+                </div>
                 </AccordionItemBody>
                 </AccordionItem>
                 <AccordionItem>
                 <AccordionItemTitle>
-                <h3>Calories</h3>
-                <div>Understand!</div>
+                <h3>Word Cloud</h3>
+                <div>Most Common Foods</div>
                 </AccordionItemTitle>
                 <AccordionItemBody>
-                <p>Body content</p>
+                <div>
+                  <h1>Word Cloud</h1>
+                  <WordCloud
+                    data={data2}
+                    fontSizeMapper={fontSizeMapper}
+                  />
+                </div>
                 </AccordionItemBody>
                 </AccordionItem>
                 </Accordion>
@@ -155,48 +219,73 @@ class App extends Component {
         } else if (this.state.dataCapture === 'HomePage') {
           var data;
           var data2;
-            console.log("return! HomePage")
-            fetch('http://localhost:3001/trends', {
-                method: 'GET'
-            }).then((response) => response.json())
-                .then((result) => {
-                    data = JSON.parse(result);
-                });
-                fetch('http://localhost:3001/tags', {
-                    method: 'GET',
-                }).then((response) => response.json())
-                    .then((result) => {
-                        data2 = JSON.parse(result);
-                    });
-              // const data = [
-              //     {
-              //         color: "steelblue",
-              //         points: [{x: 1, y: 2}, {x: 3, y: 5}, {x: 7, y: -3}]
-              //     }
-              // ];
-              // const data2 = [
-              //   { text: 'Hey', value: 1000 },
-              //   { text: 'lol', value: 200 },
-              //   { text: 'first impression', value: 800 },
-              //   { text: 'very cool', value: 1000000 },
-              //   { text: 'duck', value: 10 },
-              // ];
+              const data = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 90}, {x: 4, y: 30}, {x: 5, y: 90}, {x: 6, y: 80}]
+                  }
+              ];
+              const data3 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 40}, {x: 4, y: 90}, {x: 5, y: 80}, {x: 6, y: 70}]
+                  }
+              ];
+              const data4 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 30}, {x: 4, y: 60}, {x: 5, y: 98}, {x: 6, y: 80}]
+                  }
+              ];
+              const data2 = [
+                { text: 'Protein', value: 1000 },
+                { text: 'Fruit', value: 200 },
+                { text: 'Grains', value: 800 },
+                { text: 'Vegetable', value: 1000000 },
+                { text: 'orange', value: 10 },
+                { text: 'apple', value: 30 },
+                { text: 'banana', value: 10 },
+                { text: 'chicken', value: 10 },
+                { text: 'beef', value: 30 },
+                { text: 'sandwhich', value: 10 },
+                { text: 'burger', value: 10 },
+                { text: 'lettuce', value: 30 },
+              ];
             return (
                 <div>
                     <div className="App">
                         <h1>Food Trend</h1>
+                        <p> Legend: x is date, y is percentage </p>
+                        Vegetable
                         <LineChart
                             width={600}
                             height={400}
                             data={data}
                         />
                     </div>
+                    <div className="App">
+                        Proteins
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data3}
+                        />
+                    </div>
+                    <div className="App">
+                        Grains
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data4}
+                        />
+
+                    </div>
                     <div>
+                      <h1>Word Cloud</h1>
                       <WordCloud
                         data={data2}
                         fontSizeMapper={fontSizeMapper}
-                      />,
-                      document.getElementById('root')
+                      />
                     </div>
                     <div>
                     <button onClick={() => this.goPhoto()}>
