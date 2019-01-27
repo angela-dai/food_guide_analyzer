@@ -53,17 +53,32 @@ class App extends Component {
             });
     }
 
+    handleInputEvent(evt) {
+        console.log(evt);
+        this.img = this.refs.CameraImg;
+        this.img.src = URL.createObjectURL(evt.target.files[0]);
+        this.img.onload = () => { URL.revokeObjectURL(this.src); }
+        this.setState({dataCapture: 'PictureTaken'});
+        console.log(this.img)
+        this.sendData(evt.target.files[0]);
+    }
+
     takePicture() {
-        this.camera.capture()
-            .then(blob => {
-                console.log(blob)
-                this.img = this.refs.CameraImg;
-                this.img.src = URL.createObjectURL(blob);
-                this.img.onload = () => { URL.revokeObjectURL(this.src); }
-                this.setState({dataCapture: 'PictureTaken'});
-                console.log(this.img)
-                this.sendData(blob)
-            })
+        try{
+            this.camera.capture()
+                .then(blob => {
+                    console.log(blob)
+                    this.img = this.refs.CameraImg;
+                    this.img.src = URL.createObjectURL(blob);
+                    this.img.onload = () => { URL.revokeObjectURL(this.src); }
+                    this.setState({dataCapture: 'PictureTaken'});
+                    console.log(this.img)
+                    this.sendData(blob)
+                })
+        } catch(err) {
+            this.inputElement.onchange = this.handleInputEvent.bind(this)
+            this.inputElement.click();
+        }
     }
 
     handleChange(tagsIn) {
@@ -90,6 +105,11 @@ class App extends Component {
                 >
                 <div style={style.captureContainer} onClick={this.takePicture}>
                 <div style={style.captureButton} />
+                <input
+                    ref={input => this.inputElement = input}
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif,image/bmp"
+                    style={{display: 'none'}} />
                 </div>
                 </Camera>
                 <img src={this.img} ref="CameraImg"/>
