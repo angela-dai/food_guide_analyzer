@@ -42,7 +42,7 @@ class App extends Component {
     }
 
     goHome() {
-        this.setState({dataCapture: "HomePage"});
+        this.setState({dataCapture: null});
     }
 
     goPhoto() {
@@ -129,6 +129,41 @@ class App extends Component {
                 </div>
             );
         } else if (this.state.dataCapture === 'PictureTaken') {
+            var data;
+            var data2;
+              const data = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 90}, {x: 4, y: 30}, {x: 5, y: 90}, {x: 6, y: 80}]
+                  }
+              ];
+              const data3 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 40}, {x: 4, y: 90}, {x: 5, y: 80}, {x: 6, y: 70}]
+                  }
+              ];
+              const data4 = [
+                  {
+                      color: "steelblue",
+                      points: [{x: 1, y: 50}, {x: 2, y: 70}, {x: 3, y: 30}, {x: 4, y: 60}, {x: 5, y: 98}, {x: 6, y: 80}]
+                  }
+              ];
+              const data2 = [
+                { text: 'Protein', value: 1000 },
+                { text: 'Fruit', value: 200 },
+                { text: 'Grains', value: 800 },
+                { text: 'Vegetable', value: 1000000 },
+                { text: 'orange', value: 10 },
+                { text: 'apple', value: 30 },
+                { text: 'banana', value: 10 },
+                { text: 'chicken', value: 10 },
+                { text: 'beef', value: 30 },
+                { text: 'sandwhich', value: 10 },
+                { text: 'burger', value: 10 },
+                { text: 'lettuce', value: 30 },
+              ];
+ 
             console.log("return!")
             return (
                 <div>
@@ -138,19 +173,10 @@ class App extends Component {
                 <Accordion>
                 <AccordionItem>
                 <AccordionItemTitle>
-                <h3>Tags</h3>
-                </AccordionItemTitle>
-                <AccordionItemBody>
-                <p>What Names</p>
-                </AccordionItemBody>
-                </AccordionItem>
-                <AccordionItem>
-                <AccordionItemTitle>
                 <h3>Calories</h3>
-                <div>Understand!</div>
                 </AccordionItemTitle>
                 <AccordionItemBody>
-                <p>Body content</p>
+                <p>300</p>
                 </AccordionItemBody>
                 </AccordionItem>
                 </Accordion>
@@ -171,24 +197,74 @@ class App extends Component {
                 Go Home
                 </button>
                 </div>
+                <div className="App">
+                        <h1>Food Trend</h1>
+                        <p> Legend: x is date, y is percentage </p>
+                        Vegetable
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data}
+                        />
+                    </div>
+                    <div className="App">
+                        Proteins
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data3}
+                        />
+                    </div>
+                    <div className="App">
+                        Grains
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data4}
+                        />
+
+                    </div>
+                    <div>
+                      <h1>Word Cloud</h1>
+                      <WordCloud
+                        data={data2}
+                        fontSizeMapper={fontSizeMapper}
+                      />
+                    </div>
+                    <div>
+                    <button onClick={() => this.goPhoto()}>
+                    Take Photo
+                    </button>
+                    </div>
                 </div>
             );
         } else if (this.state.dataCapture === 'HomePage') {
             var data;
             var data2;
-              console.log("return! HomePage")
-              fetch('http://localhost:3001/trends', {
-                  method: 'GET'
-              }).then((response) => response.json())
-                  .then((result) => {
-                      data = JSON.parse(result);
-                  });
-                  fetch('http://localhost:3001/tags', {
-                      method: 'GET',
-                  }).then((response) => response.json())
-                      .then((result) => {
-                          data2 = JSON.parse(result);
-                      });
+            console.log("return! HomePage")
+            fetch(`http://localhost:3001/trends`, {
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then((response) => response.json())
+                .then((result) => {
+                    data = JSON.parse(result);
+            });
+
+
+
+            fetch(`http://localhost:3001/tags`, {
+                headers : { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            }).then((response) => response.json())
+                .then((result) => {
+                    data2 = JSON.parse(result);
+            });
+            console.log(data)
+            console.log(data2)
                 // const data = [
                 //     {
                 //         color: "steelblue",
