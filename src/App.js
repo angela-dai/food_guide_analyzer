@@ -95,9 +95,8 @@ class App extends Component {
             return (
                 <div className="App" style={style.backgroundColorCont}> 
                 <header className="App-header" style={{backgroundColor: "lightblue"}}>
-                <img src={FoodIcon} className="App-logo" alt="" />
                 <p>
-                Food Analyzer Pro
+                PlatePal
                 </p>
                 <div style={style.container}>
                 <Camera
