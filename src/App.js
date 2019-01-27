@@ -9,7 +9,7 @@ import {
     AccordionItem,
     AccordionItemTitle,
     AccordionItemBody,
- } from 'react-accessible-accordion';
+} from 'react-accessible-accordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -33,24 +33,37 @@ class App extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.goHome = this.goHome.bind(this);
-        
+
     }
 
     goHome() {
         this.setState({dataCapture: null});
     }
 
+    sendData(data) {
+        var fd = new FormData();
+        fd.append('image', data)
+
+        fetch('http://localhost:3001/submission', {
+            method: 'POST',
+            body: fd
+        }).then((response) => response.json())
+            .then((result) => {
+                console.log(result);
+            });
+    }
+
     takePicture() {
         this.camera.capture()
-        .then(blob => {
-            console.log(blob)
-            this.img = this.refs.CameraImg;
-            console.log(this.state.dataCapture)
-            this.img.src = URL.createObjectURL(blob);
-            this.img.onload = () => { URL.revokeObjectURL(this.src); }
-            this.setState({dataCapture: 'PictureTaken'});
-        })
-        
+            .then(blob => {
+                console.log(blob)
+                this.img = this.refs.CameraImg;
+                this.img.src = URL.createObjectURL(blob);
+                this.img.onload = () => { URL.revokeObjectURL(this.src); }
+                this.setState({dataCapture: 'PictureTaken'});
+                console.log(this.img)
+                this.sendData(blob)
+            })
     }
 
     handleChange(tagsIn) {
@@ -87,47 +100,47 @@ class App extends Component {
         } else if (this.state.dataCapture === 'PictureTaken') {
             console.log("return!")
             return (
-            <div>
+                <div>
                 <div id="rectangle" style={rectangleStyle}></div>
                 <TagsInput value={this.state.tags} onChange={this.handleChange} />
                 <div>
                 <Accordion>
-                    <AccordionItem>
-                        <AccordionItemTitle>
-                            <h3>Tags</h3>
-                        </AccordionItemTitle>
-                        <AccordionItemBody>
-                            <p>What Names</p>
-                        </AccordionItemBody>
-                    </AccordionItem>
-                    <AccordionItem>
-                        <AccordionItemTitle>
-                            <h3>Calories</h3>
-                            <div>Understand!</div>
-                        </AccordionItemTitle>
-                        <AccordionItemBody>
-                            <p>Body content</p>
-                        </AccordionItemBody>
-                    </AccordionItem>
+                <AccordionItem>
+                <AccordionItemTitle>
+                <h3>Tags</h3>
+                </AccordionItemTitle>
+                <AccordionItemBody>
+                <p>What Names</p>
+                </AccordionItemBody>
+                </AccordionItem>
+                <AccordionItem>
+                <AccordionItemTitle>
+                <h3>Calories</h3>
+                <div>Understand!</div>
+                </AccordionItemTitle>
+                <AccordionItemBody>
+                <p>Body content</p>
+                </AccordionItemBody>
+                </AccordionItem>
                 </Accordion>
                 </div>
                 <div>
-                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                    Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                    </div>
-                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                    Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                    </div>
-                    <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                    Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                    </div>
-               </div>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
+                </div>
                 <div>
-                 <button onClick={() => this.goHome()}>
-                   Go Home
-                 </button>
-               </div>
-            </div>
+                <button onClick={() => this.goHome()}>
+                Go Home
+                </button>
+                </div>
+                </div>
             )
         }
     }
@@ -136,44 +149,44 @@ class App extends Component {
 const handle = (props) => {
     const { value, dragging, index, ...restProps } = props;
     return (
-      <Tooltip
+        <Tooltip
         prefixCls="rc-slider-tooltip"
         overlay={value}
         visible={dragging}
         placement="top"
         key={index}
-      >
+        >
         <Handle value={value} {...restProps} />
-      </Tooltip>
+        </Tooltip>
     );
-   };
+};
 
 const style = {
-  preview: {
-    position: 'relative',
-  },
-  backgroundColorCont: {
-      backgroundColor: "#FF0000",
-  },
-  captureContainer: {
-    display: 'flex',
-    position: 'absolute',
-    justifyContent: 'center',
-    zIndex: 1,
-    bottom: 0,
-    width: '100%'
-  },
-  captureButton: {
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    height: 56,
-    width: 56,
-    color: '#000',
-    margin: 20
-  },
-  captureImage: {
-    width: '100%',
-  }
+    preview: {
+        position: 'relative',
+    },
+    backgroundColorCont: {
+        backgroundColor: "#FF0000",
+    },
+    captureContainer: {
+        display: 'flex',
+        position: 'absolute',
+        justifyContent: 'center',
+        zIndex: 1,
+        bottom: 0,
+        width: '100%'
+    },
+    captureButton: {
+        backgroundColor: '#fff',
+        borderRadius: '50%',
+        height: 56,
+        width: 56,
+        color: '#000',
+        margin: 20
+    },
+    captureImage: {
+        width: '100%',
+    }
 };
 
 export default App;
