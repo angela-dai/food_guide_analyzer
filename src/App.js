@@ -18,7 +18,6 @@ import Tooltip from 'rc-tooltip';
 const Handle = Slider.Handle;
 
 const config = require('./config.json');
-const port = config.port;
 const backend_url = config.url;
 
 const rectangleStyle = {
@@ -47,7 +46,7 @@ class App extends Component {
         var fd = new FormData();
         fd.append('image', data)
 
-        fetch(`${backend_url}:${port}/submission`, {
+        fetch(`${backend_url}/submission`, {
             method: 'POST',
             body: fd
         }).then((response) => response.json())
