@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Camera from 'react-camera';
 import TagsInput from 'react-tagsinput'
-import logo from './logo.svg';
+import FoodIcon from './FoodIcon.png';
 import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
 import './App.css';
 import {
@@ -9,23 +9,26 @@ import {
     AccordionItem,
     AccordionItemTitle,
     AccordionItemBody,
- } from 'react-accessible-accordion';
- import 'react-accessible-accordion/dist/fancy-example.css';
+} from 'react-accessible-accordion';
+import 'react-accessible-accordion/dist/fancy-example.css';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import Tooltip from 'rc-tooltip';
+import LineChart from 'react-linechart';
+import '../node_modules/react-linechart/dist/styles.css';
+
+import { render } from 'react-dom';
+import WordCloud from 'react-d3-cloud';
 
 const Handle = Slider.Handle;
 
 const rectangleStyle = {
-	width: '800px',
-	height: '50px',
-	background: 'blue'
+    width: '800px',
+    height: '50px',
+    background: 'lightblue'
 };
 
-
-export default class App extends Component {
-
+class App extends Component {
     constructor(props) {
         super(props);
         this.takePicture = this.takePicture.bind(this);
@@ -33,42 +36,60 @@ export default class App extends Component {
             dataCapture: null,
             tags: []
         };
-        this.handleChange = this.handleChange.bind(this)
-        this.goHome = this.goHome.bind(this)
+        this.handleChange = this.handleChange.bind(this);
+        this.goHome = this.goHome.bind(this);
+        this.goPhoto = this.goPhoto.bind(this);
 
+    }
+
+    goHome() {
+        this.setState({dataCapture: "HomePage"});
+    }
+
+    goPhoto() {
+        this.setState({dataCapture: null});
+    }
+
+    sendData(data) {
+        var fd = new FormData();
+        fd.append('image', data)
+
+        fetch('http://localhost:3001/submission', {
+            method: 'POST',
+            body: fd
+        }).then((response) => response.json())
+            .then((result) => {
+                console.log(result);
+            });
     }
 
     takePicture() {
         this.camera.capture()
-        .then(blob => {
-            console.log(blob)
-            this.img = this.refs.CameraImg;
-            this.setState({dataCapture: "lol"});
-            console.log(this.state.dataCapture)
-            this.img.src = URL.createObjectURL(blob);
-            this.img.onload = () => { URL.revokeObjectURL(this.src); }
-        })
-
+            .then(blob => {
+                console.log(blob)
+                this.img = this.refs.CameraImg;
+                this.img.src = URL.createObjectURL(blob);
+                this.img.onload = () => { URL.revokeObjectURL(this.src); }
+                this.setState({dataCapture: 'PictureTaken'});
+                console.log(this.img)
+                this.sendData(blob)
+            })
     }
 
     handleChange(tagsIn) {
         // API Get
-        console.log(tagsIn);
-        this.setState({tags: tagsIn});
-    }
-
-    goHome() {
-      this.setState({dataCapture: null});
+        console.log(tagsIn)
+        this.setState({tags: tagsIn})
     }
 
     render() {
         if (this.state.dataCapture === null) {
             return (
-                <div className="App">
-                <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
+                <div className="App" style={style.backgroundColorCont}>
+                <header className="App-header" style={{backgroundColor: "lightblue"}}>
+                <img src={FoodIcon} className="App-logo" alt="" />
                 <p>
-                Edit <code>src/App.js</code> and save to reload.
+                PlatePal
                 </p>
                 <div style={style.container}>
                 <Camera
@@ -83,72 +104,134 @@ export default class App extends Component {
                 </Camera>
                 <img src={this.img} ref="CameraImg"/>
                 </div>
-                <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                >
-                Learn React
-                </a>
                 </header>
                 </div>
             );
-        } else {
-            console.log("return!")
+        } else if (this.state.dataCapture === 'PictureTaken') {
+            console.log("return! PictureTaken")
             return (
-            <div>
+                <div>
                 <div id="rectangle" style={rectangleStyle}></div>
                 <TagsInput value={this.state.tags} onChange={this.handleChange} />
                 <div>
                 <Accordion>
-                    <AccordionItem>
-                        <AccordionItemTitle>
-                            <h3>Tags</h3>
-                        </AccordionItemTitle>
-                        <AccordionItemBody>
-                            <p>What Names</p>
-                        </AccordionItemBody>
-                    </AccordionItem>
-                    <AccordionItem>
-                        <AccordionItemTitle>
-                            <h3>Calories</h3>
-                            <div>Understand!</div>
-                        </AccordionItemTitle>
-                        <AccordionItemBody>
-                            <p>Body content</p>
-                        </AccordionItemBody>
-                    </AccordionItem>
+                <AccordionItem>
+                <AccordionItemTitle>
+                <h3>Tags</h3>
+                </AccordionItemTitle>
+                <AccordionItemBody>
+                <p>What Names</p>
+                </AccordionItemBody>
+                </AccordionItem>
+                <AccordionItem>
+                <AccordionItemTitle>
+                <h3>Calories</h3>
+                <div>Understand!</div>
+                </AccordionItemTitle>
+                <AccordionItemBody>
+                <p>Body content</p>
+                </AccordionItemBody>
+                </AccordionItem>
                 </Accordion>
                 </div>
                 <div>
-                  <button onClick={() => this.goHome()}>
-                    Go Home
-                  </button>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
+                <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
+                Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
+                </div>
                 </div>
                 <div>
-                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                  Vegetables {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                  </div>
-                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                  Proteins {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                  </div>
-                  <div className='rowC' style={{display:"flex", flexDirection:"row"}}>
-                  Grains {" "} <Slider min={0} max={100} defaultValue={0} handle={handle} />
-                  </div>
+                <button onClick={() => this.goHome()}>
+                Go Home
+                </button>
                 </div>
-            </div>
-            )
+                </div>
+            );
+        } else if (this.state.dataCapture === 'HomePage') {
+          var data;
+          var data2;
+            console.log("return! HomePage")
+            fetch('http://localhost:3001/trends', {
+                method: 'GET'
+            }).then((response) => response.json())
+                .then((result) => {
+                    data = JSON.parse(result);
+                });
+                fetch('http://localhost:3001/tags', {
+                    method: 'GET',
+                }).then((response) => response.json())
+                    .then((result) => {
+                        data2 = JSON.parse(result);
+                    });
+              // const data = [
+              //     {
+              //         color: "steelblue",
+              //         points: [{x: 1, y: 2}, {x: 3, y: 5}, {x: 7, y: -3}]
+              //     }
+              // ];
+              // const data2 = [
+              //   { text: 'Hey', value: 1000 },
+              //   { text: 'lol', value: 200 },
+              //   { text: 'first impression', value: 800 },
+              //   { text: 'very cool', value: 1000000 },
+              //   { text: 'duck', value: 10 },
+              // ];
+            return (
+                <div>
+                    <div className="App">
+                        <h1>Food Trend</h1>
+                        <LineChart
+                            width={600}
+                            height={400}
+                            data={data}
+                        />
+                    </div>
+                    <div>
+                      <WordCloud
+                        data={data2}
+                        fontSizeMapper={fontSizeMapper}
+                      />,
+                      document.getElementById('root')
+                    </div>
+                    <div>
+                    <button onClick={() => this.goPhoto()}>
+                    Take Photo
+                    </button>
+                    </div>
+                </div>
+              );
         }
+      }
     }
-}
+
+const fontSizeMapper = word => Math.log2(word.value) * 5;
+
+const handle = (props) => {
+    const { value, dragging, index, ...restProps } = props;
+    return (
+        <Tooltip
+        prefixCls="rc-slider-tooltip"
+        overlay={value}
+        visible={dragging}
+        placement="top"
+        key={index}
+        >
+        <Handle value={value} {...restProps} />
+        </Tooltip>
+    );
+};
 
 const style = {
     preview: {
         position: 'relative',
-        border: '1px solid red',
-        width: '100%',
-        height: '100%'
+    },
+    backgroundColorCont: {
+        backgroundColor: "#FF0000",
     },
     captureContainer: {
         display: 'flex',
@@ -156,15 +239,14 @@ const style = {
         justifyContent: 'center',
         zIndex: 1,
         bottom: 0,
-        width: '100%',
-        border: '1px solid blue'
+        width: '100%'
     },
     captureButton: {
         backgroundColor: '#fff',
         borderRadius: '50%',
         height: 56,
         width: 56,
-        color: '#123',
+        color: '#000',
         margin: 20
     },
     captureImage: {
@@ -172,17 +254,4 @@ const style = {
     }
 };
 
-const handle = (props) => {
-  const { value, dragging, index, ...restProps } = props;
-  return (
-    <Tooltip
-      prefixCls="rc-slider-tooltip"
-      overlay={value}
-      visible={dragging}
-      placement="top"
-      key={index}
-    >
-      <Handle value={value} {...restProps} />
-    </Tooltip>
-  );
-};
+export default App;
