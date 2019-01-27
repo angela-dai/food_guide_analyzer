@@ -24,7 +24,7 @@ const config = require('./config.json');
 const backend_url = config.url;
 
 const rectangleStyle = {
-    width: '800px',
+    width: '100%',
     height: '50px',
     background: 'lightblue'
 };
@@ -197,6 +197,7 @@ class App extends Component {
                 Go Home
                 </button>
                 </div>
+                <div id="rectangle" style={rectangleStyle}></div>
                 <div className="App">
                         <h1>Food Trend</h1>
                         <p> Legend: x is date, y is percentage </p>
@@ -224,7 +225,8 @@ class App extends Component {
                         />
 
                     </div>
-                    <div>
+                    <div id="rectangle" style={rectangleStyle}></div>
+                    <div style={{textAlign: 'center'}}>
                       <h1>Word Cloud</h1>
                       <WordCloud
                         data={data2}
