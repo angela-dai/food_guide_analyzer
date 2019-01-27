@@ -25,11 +25,7 @@ const backend_url = config.url;
 
 const rectangleStyle = {
     width: '100%',
-<<<<<<< HEAD
     height: '50px',
-=======
-    height: '7vh',
->>>>>>> origin
     background: 'lightblue'
 };
 
