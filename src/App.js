@@ -21,8 +21,8 @@ const config = require('./config.json');
 const backend_url = config.url;
 
 const rectangleStyle = {
-    width: '800px',
-    height: '50px',
+    width: '100%',
+    height: '7vh',
     background: 'lightblue'
 };
 
