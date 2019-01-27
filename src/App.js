@@ -25,7 +25,11 @@ const backend_url = config.url;
 
 const rectangleStyle = {
     width: '100%',
+<<<<<<< HEAD
     height: '50px',
+=======
+    height: '7vh',
+>>>>>>> origin
     background: 'lightblue'
 };
 
@@ -102,9 +106,8 @@ class App extends Component {
             return (
                 <div className="App" style={style.backgroundColorCont}> 
                 <header className="App-header" style={{backgroundColor: "lightblue"}}>
-                <img src={FoodIcon} className="App-logo" alt="" />
                 <p>
-                Food Analyzer Pro
+                PlatePal
                 </p>
                 <div style={style.container}>
                 <Camera
